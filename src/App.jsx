@@ -817,11 +817,11 @@ export default function App() {
 
       {/* Main content */}
       <main style={{ maxWidth: 860, margin: '0 auto', padding: '24px 20px' }}>
-        {tab === 'setup' && <SetupTab />}
-        {tab === 'chores' && <ChoresTab />}
-        {tab === 'activities' && <ActivitiesTab />}
-        {tab === 'chart' && <ChartTab />}
-        {tab === 'print' && <PrintTab />}
+        {tab === 'setup' && SetupTab()}
+        {tab === 'chores' && ChoresTab()}
+        {tab === 'activities' && ActivitiesTab()}
+        {tab === 'chart' && ChartTab()}
+        {tab === 'print' && PrintTab()}
       </main>
     </>
   )
