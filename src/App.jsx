@@ -565,7 +565,7 @@ export default function App() {
         <div
           ref={printRef}
           className="print-area"
-          style={{ background: '#fff', borderRadius: 16, padding: 32, border: `2px solid ${COLORS.border}` }}
+          style={{ background: '#fff', borderRadius: 16, padding: '24px 16px', border: `2px solid ${COLORS.border}`, overflowX: 'auto', width: '100%', boxSizing: 'border-box' }}
         >
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: 24, borderBottom: `3px dashed ${COLORS.primary}`, paddingBottom: 20 }}>
@@ -586,6 +586,7 @@ export default function App() {
                 Goal: ${kid.weeklyBudget.toFixed(2)} / week
               </span>
             </h2>
+            <div className="table-scroll">
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ background: COLORS.primaryLight }}>
@@ -637,6 +638,7 @@ export default function App() {
                 </tr>
               </tfoot>
             </table>
+            </div>
           </section>
 
           {/* Screen Time chart */}
@@ -647,6 +649,7 @@ export default function App() {
                 Limit: {kid.dailyScreenLimit} min / day
               </span>
             </h2>
+            <div className="table-scroll">
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13, marginBottom: 16 }}>
               <thead>
                 <tr style={{ background: '#fdf2f8' }}>
@@ -700,6 +703,7 @@ export default function App() {
                 </tr>
               </tfoot>
             </table>
+            </div>
 
             {/* Favorites */}
             {activities.length > 0 && (
@@ -760,12 +764,14 @@ export default function App() {
     <>
       <style>{`
         * { box-sizing: border-box; }
-        body { margin: 0; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: ${COLORS.bg}; }
+        html, body { margin: 0; overflow-x: hidden; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: ${COLORS.bg}; }
         button:hover { opacity: 0.85; }
+        .table-scroll { overflow-x: auto; width: 100%; }
+        .table-scroll table { min-width: 520px; }
         @media print {
           body * { visibility: hidden; }
           .print-area, .print-area * { visibility: visible; }
-          .print-area { position: fixed; left: 0; top: 0; width: 100%; }
+          .print-area { position: fixed; left: 0; top: 0; width: 100%; padding: 20px; }
           nav, .no-print { display: none !important; }
         }
         @media (max-width: 600px) {
