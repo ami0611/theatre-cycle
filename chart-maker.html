@@ -14,7 +14,6 @@
         input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 13px; }
         button { background: #ff6b6b; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; font-weight: bold; margin-top: 10px; }
 
-        /* A4 Layout Base */
         #printable-chart { 
             width: 210mm; min-height: 297mm; padding: 10mm 12mm; margin: 0 auto;
             background: white; box-sizing: border-box; border: 1px solid #eee;
@@ -36,6 +35,155 @@
             #printable-chart { border: none; margin: 0; width: 210mm; }
         }
 
-        /* Design Styles */
         .style-dot td, .style-dot th { border-style: dotted !important; }
         .style-double td, .style-double th { border-style: double !important; border-width: 4px !important; }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <h2 style="margin:0 0 15px; font-size:18px;">✨ Design & Contents Customizer</h2>
+    
+    <div class="input-group grid">
+        <div><label>書体 (Font Style)</label>
+            <select id="in-font">
+                <option value="'Noto Sans JP', sans-serif">Standard (Gothic)</option>
+                <option value="'Kiwi Maru', serif">Handwriting (Cute)</option>
+                <option value="'Noto Serif JP', serif">Classic (Musical Script)</option>
+                <option value="'Courier New', monospace">Typewriter (Retro)</option>
+            </select>
+        </div>
+        <div><label>デザイン (Border Style)</label>
+            <select id="in-style">
+                <option value="style-normal">Normal (Solid)</option>
+                <option value="style-dot">Cute (Dots)</option>
+                <option value="style-double">Classic (Double)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="input-group grid">
+        <div><label>名前 / 絵文字 / 色</label>
+            <div style="display:flex; gap:3px;"><input type="text" id="in-name" value="Emma"><input type="text" id="in-emoji" value="❄️" style="width:40px;"><input type="color" id="in-color" value="#ffeaa7" style="width:50px;"></div>
+        </div>
+        <div><label>今週の情熱 (Goal)</label><input type="text" id="in-goal" value="Musical Theater (Anna!)"></div>
+    </div>
+
+    <div class="grid">
+        <div class="input-group">
+            <label>💰 お小遣いアクティビティ</label>
+            <div style="display:flex; gap:2px; margin-bottom:3px;"><input type="text" id="in-act1" value="英語の発音練習"><input type="text" id="in-pr1" value="¥80"></div>
+            <div style="display:flex; gap:2px; margin-bottom:3px;"><input type="text" id="in-act2" value="学校以外の算数"><input type="text" id="in-pr2" value="¥80"></div>
+            <div style="display:flex; gap:2px; margin-bottom:3px;"><input type="text" id="in-act3" value="漢字の復習"><input type="text" id="in-pr3" value="¥80"></div>
+            <div style="display:flex; gap:2px; margin-bottom:3px;"><input type="text" id="in-act4" value="セリフや歌の練習"><input type="text" id="in-pr4" value="¥160"></div>
+            <div style="display:flex; gap:2px; margin-bottom:3px;"><input type="text" id="in-act5" value="ヨデルの練習"><input type="text" id="in-pr5" value="¥80"></div>
+            <div style="display:flex; gap:2px;"><input type="text" id="in-act6" value="お部屋の片付け"><input type="text" id="in-pr6" value="¥50"></div>
+        </div>
+        <div>
+            <div class="input-group"><label>📱 制限時間 (平日/週末)</label><div style="display:flex; gap:4px;"><input type="text" id="in-st-wd" value="45 min"><input type="text" id="in-st-we" value="60 min"></div></div>
+            <div class="input-group"><label>🚀 無制限 (UNLIMITED)</label><input type="text" id="in-st-unlimited" value="Musical Research & Homework"></div>
+            <div class="input-group"><label>✨ ボーナス条件</label><input type="text" id="in-st-bonus" value="English Reading (20 min) = +15 min"></div>
+            <div class="input-group grid"><div><label>ベース/上限</label><div style="display:flex; gap:2px;"><input type="text" id="in-base" value="¥500"><input type="text" id="in-max" value="¥800"></div></div></div>
+        </div>
+    </div>
+    <div class="input-group"><label>🌟 聖域・メッセージ</label><input type="text" id="in-msg" value="Rehearsal is ALWAYS protected time! ✨"></div>
+    <button onclick="window.print()">🖨 このデザインで印刷する</button>
+</div>
+
+<div id="printable-chart" class="style-normal">
+    <div class="chart-header" id="out-header" style="background-color: #ffeaa7; border: 2px solid #333;">
+        <h1 style="margin:0; font-size:24px;"><span id="out-emoji">❄️</span> <span id="out-name">Emma</span>'s Weekly Chart</h1>
+        <p id="out-goal" style="margin:5px 0 0; font-weight:bold; font-size:16px;">Musical Theater (Anna - Frozen!)</p>
+    </div>
+
+    <div class="rules-grid">
+        <div>
+            <span class="section-title">💰 Allowance Settings</span>
+            <table>
+                <tr><th>Activity</th><th>Earn</th></tr>
+                <tr><td id="out-act1">英語の発音練習</td><td id="out-pr1">¥80</td></tr>
+                <tr><td id="out-act2">学校以外の算数</td><td id="out-pr2">¥80</td></tr>
+                <tr><td id="out-act3">漢字の復習</td><td id="out-pr3">¥80</td></tr>
+                <tr><td id="out-act4">セリフや歌の練習</td><td id="out-pr4">¥160</td></tr>
+                <tr><td id="out-act5">ヨデルの練習</td><td id="out-pr5">¥80</td></tr>
+                <tr><td id="out-act6">お部屋の片付け</td><td id="out-pr6">¥50</td></tr>
+                <tr style="background:#f9f9f9; font-weight:bold;"><td>Base: <span id="out-base">¥500</span></td><td>Max: <span id="out-max">¥800</span></td></tr>
+            </table>
+        </div>
+        <div>
+            <span class="section-title">📱 Screen Time Rules</span>
+            <table>
+                <tr><td>Weekdays</td><td id="out-st-wd">45 min</td></tr>
+                <tr><td>Weekends</td><td id="out-st-we">60 min</td></tr>
+            </table>
+            <div style="background:#fff9e6; border:1.5px solid #333; padding:8px; font-size:11px;">
+                <strong>🚀 UNLIMITED:</strong> <br><span id="out-st-unlimited">Musical Research & Homework</span>
+                <div style="margin-top:5px; border-top:1px dashed #333; padding-top:5px;">
+                    <strong>✨ Bonus:</strong> <br><span id="out-st-bonus">English Reading (20 min) = +15 min</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <span class="section-title">✅ Activity Tracker</span>
+    <table class="tracker-table">
+        <tr><th style="width:28%;">Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
+        <tr><td id="out-act1-t" style="text-align:left; font-size:10px;">英語の発音練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act2-t" style="text-align:left; font-size:10px;">学校以外の算数</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act3-t" style="text-align:left; font-size:10px;">漢字の復習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act4-t" style="text-align:left; font-size:10px;">セリフや歌の練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act5-t" style="text-align:left; font-size:10px;">ヨデルの練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act6-t" style="text-align:left; font-size:10px;">お部屋の片付け</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+    </table>
+
+    <div class="footer-area">
+        <div class="note-box" id="out-border">
+            <strong>🌟 Family Value (聖域):</strong>
+            <p id="out-msg" style="margin:5px 0; font-size:12px; font-weight:bold;">Rehearsal is ALWAYS protected time! ✨</p>
+        </div>
+        <div style="border: 2px solid #333; padding:8px; text-align:center;">
+            <span style="font-size:11px;">Total Earned This Week:</span>
+            <div style="font-size:22px; font-weight:bold; margin-top:3px;">¥ _________</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const map = {
+        'in-name': ['out-name'], 'in-emoji': ['out-emoji'], 'in-goal': ['out-goal'],
+        'in-act1': ['out-act1', 'out-act1-t'], 'in-act2': ['out-act2', 'out-act2-t'],
+        'in-act3': ['out-act3', 'out-act3-t'], 'in-act4': ['out-act4', 'out-act4-t'],
+        'in-act5': ['out-act5', 'out-act5-t'], 'in-act6': ['out-act6', 'out-act6-t'],
+        'in-pr1': ['out-pr1'], 'in-pr2': ['out-pr2'], 'in-pr3': ['out-pr3'], 'in-pr4': ['out-pr4'],
+        'in-pr5': ['out-pr5'], 'in-pr6': ['out-pr6'],
+        'in-base': ['out-base'], 'in-max': ['out-max'], 'in-msg': ['out-msg'],
+        'in-st-wd': ['out-st-wd'], 'in-st-we': ['out-st-we'], 'in-st-bonus': ['out-st-bonus'],
+        'in-st-unlimited': ['out-st-unlimited']
+    };
+
+    Object.keys(map).forEach(key => {
+        const el = document.getElementById(key);
+        if(el) {
+            el.addEventListener('input', (e) => {
+                map[key].forEach(outId => { document.getElementById(outId).innerText = e.target.value; });
+            });
+        }
+    });
+
+    document.getElementById('in-color').addEventListener('input', (e) => {
+        document.getElementById('out-header').style.backgroundColor = e.target.value;
+        document.getElementById('out-border').style.borderColor = e.target.value;
+    });
+
+    document.getElementById('in-font').addEventListener('change', (e) => {
+        document.getElementById('printable-chart').style.fontFamily = e.target.value;
+    });
+
+    document.getElementById('in-style').addEventListener('change', (e) => {
+        const chart = document.getElementById('printable-chart');
+        chart.classList.remove('style-normal', 'style-dot', 'style-double');
+        chart.classList.add(e.target.value);
+    });
+</script>
+</body>
+</html>
