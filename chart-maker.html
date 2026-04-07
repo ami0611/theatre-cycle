@@ -60,5 +60,98 @@
     <div style="display:flex; gap:2px;"><input type="text" id="in-a4" value="セリフ練習"><input type="text" id="in-p4" value="160" style="width:55px;"><input type="text" id="in-b4" value="10" style="width:55px;"></div>
     
     <label>📱 平日 / 週末 制限時間</label>
-    <div style="display:flex; gap:5px;"><input type="
-                                            
+    <div style="display:flex; gap:5px;"><input type="text" id="in-wd" value="45 min"><input type="text" id="in-we" value="60 min"></div>
+    
+    <label>🌟 聖域・応援メッセージ</label>
+    <input type="text" id="in-msg" value="Rehearsal is ALWAYS protected time! ✨">
+    
+    <label>🌈 振り返り / ✉️ メッセージ タイトル</label>
+    <div style="display:flex; gap:5px;"><input type="text" id="in-rt" value="Weekly Reflection"><input type="text" id="in-mt" value="Message from Mom"></div>
+    
+    <button class="btn" onclick="window.print()">🖨 印刷（空欄で出力されます）</button>
+</div>
+
+<div class="preview">
+    <div id="chart">
+        <div class="header" id="out-h" style="background-color: #ffeaa7;">
+            <h1 style="margin:0; font-size:24px;"><span id="out-n">Emma</span>'s Weekly Chart</h1>
+        </div>
+
+        <div class="flex-row">
+            <div>
+                <span class="section-title">💰 My Allowance Settings</span>
+                <table>
+                    <tr><th>Activity</th><th>Price</th><th>Bonus</th></tr>
+                    <tr><td id="out-a1"></td><td>¥<span id="out-p1"></span></td><td>+<span id="out-b1"></span>m</td></tr>
+                    <tr><td id="out-a2"></td><td>¥<span id="out-p2"></span></td><td>+<span id="out-b2"></span>m</td></tr>
+                    <tr><td id="out-a3"></td><td>¥<span id="out-p3"></span></td><td>+<span id="out-b3"></span>m</td></tr>
+                    <tr><td id="out-a4"></td><td>¥<span id="out-p4"></span></td><td>+<span id="out-b4"></span>m</td></tr>
+                </table>
+            </div>
+            <div>
+                <span class="section-title">📱 Screen Time Rules</span>
+                <table><tr><th>Weekday</th><th>Weekend</th></tr><tr><td id="out-wd" style="text-align:center; font-weight:bold;"></td><td id="out-we" style="text-align:center; font-weight:bold;"></td></tr></table>
+                <div style="font-size:10px; background:#fff9e6; border:2.5px solid #333; padding:8px; font-weight:bold;"><span id="out-msg"></span></div>
+            </div>
+        </div>
+
+        <span class="section-title">✅ Weekly Activity Tracker</span>
+        <table class="tracker">
+            <tr><th style="width:30%;">Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
+            <tr><td id="out-t1"></td><td><input type="checkbox" class="ck" data-i="1"></td><td><input type="checkbox" class="ck" data-i="1"></td><td><input type="checkbox" class="ck" data-i="1"></td><td><input type="checkbox" class="ck" data-i="1"></td><td><input type="checkbox" class="ck" data-i="1"></td><td><input type="checkbox" class="ck" data-i="1"></td><td><input type="checkbox" class="ck" data-i="1"></td></tr>
+            <tr><td id="out-t2"></td><td><input type="checkbox" class="ck" data-i="2"></td><td><input type="checkbox" class="ck" data-i="2"></td><td><input type="checkbox" class="ck" data-i="2"></td><td><input type="checkbox" class="ck" data-i="2"></td><td><input type="checkbox" class="ck" data-i="2"></td><td><input type="checkbox" class="ck" data-i="2"></td><td><input type="checkbox" class="ck" data-i="2"></td></tr>
+            <tr><td id="out-t3"></td><td><input type="checkbox" class="ck" data-i="3"></td><td><input type="checkbox" class="ck" data-i="3"></td><td><input type="checkbox" class="ck" data-i="3"></td><td><input type="checkbox" class="ck" data-i="3"></td><td><input type="checkbox" class="ck" data-i="3"></td><td><input type="checkbox" class="ck" data-i="3"></td><td><input type="checkbox" class="ck" data-i="3"></td></tr>
+            <tr><td id="out-t4"></td><td><input type="checkbox" class="ck" data-i="4"></td><td><input type="checkbox" class="ck" data-i="4"></td><td><input type="checkbox" class="ck" data-i="4"></td><td><input type="checkbox" class="ck" data-i="4"></td><td><input type="checkbox" class="ck" data-i="4"></td><td><input type="checkbox" class="ck" data-i="4"></td><td><input type="checkbox" class="ck" data-i="4"></td></tr>
+        </table>
+
+        <div class="summary">
+            <div><span>Total Earned</span><br><span class="val">¥<span id="t-m">0</span></span><span class="blank">¥ _________</span></div>
+            <div><span>Additional Time</span><br><span class="val">+<span id="t-t">0</span> min</span><span class="blank">+ _________ min</span></div>
+        </div>
+
+        <div class="footer">
+            <div class="box-grid">
+                <div class="box"><div class="box-l" id="out-rt"></div></div>
+                <div class="box"><div class="box-l" id="out-mt"></div></div>
+            </div>
+            <div style="text-align:center; font-weight:bold; font-size:14px; margin-top:5px;">Keep going! Break a leg! ✨</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const map = {
+        'in-n':['out-n'],'in-a1':['out-a1','out-t1'],'in-a2':['out-a2','out-t2'],'in-a3':['out-a3','out-t3'],'in-a4':['out-a4','out-t4'],
+        'in-p1':['out-p1'],'in-p2':['out-p2'],'in-p3':['out-p3'],'in-p4':['out-p4'],
+        'in-b1':['out-b1'],'in-b2':['out-b2'],'in-b3':['out-b3'],'in-b4':['out-b4'],
+        'in-wd':['out-wd'],'in-we':['out-we'],'in-msg':['out-msg'],'in-rt':['out-rt'],'in-mt':['out-mt']
+    };
+
+    function calc() {
+        let m=0, t=0;
+        for(let i=1; i<=4; i++) {
+            const count = document.querySelectorAll('.ck[data-i="'+i+'"]:checked').length;
+            m += count * (parseInt(document.getElementById('in-p'+i).value) || 0);
+            t += count * (parseInt(document.getElementById('in-b'+i).value) || 0);
+        }
+        document.getElementById('t-m').innerText = m;
+        document.getElementById('t-t').innerText = t;
+    }
+
+    Object.keys(map).forEach(function(id) {
+        const input = document.getElementById(id);
+        if(input) {
+            const update = function() {
+                map[id].forEach(function(oid) { document.getElementById(oid).innerText = input.value; });
+                calc();
+            };
+            input.addEventListener('input', update);
+            update();
+        }
+    });
+
+    document.querySelectorAll('.ck').forEach(function(el) { el.addEventListener('change', calc); });
+    document.getElementById('in-c').addEventListener('input', function(e) { document.getElementById('out-h').style.backgroundColor = e.target.value; });
+</script>
+</body>
+</html>
