@@ -3,33 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weekly Chart Maker | Theatre Cycle</title>
+    <title>Personal Weekly Chart Maker | Theatre Cycle</title>
     <style>
-        /* 画面表示用スタイル */
         body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
         .controls { max-width: 800px; margin: 0 auto 30px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .input-group { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
         input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { background: #ff6b6b; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; width: 100%; }
+        button { background: #ff6b6b; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; font-size: 18px; width: 100%; margin-top: 20px; font-weight: bold; }
         button:hover { background: #ee5253; }
 
-        /* A4印刷用レイアウト */
         #printable-chart { 
             width: 210mm; min-height: 297mm; padding: 15mm; margin: 0 auto;
             background: white; border: 1px solid #eee; box-sizing: border-box;
-            position: relative; overflow: hidden;
         }
-        .chart-header { text-align: center; border-bottom: 3px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .chart-header { text-align: center; border-bottom: 3px solid #333; padding: 20px; margin-bottom: 20px; }
         .chart-title { font-size: 28px; margin: 0; }
-        .chart-subtitle { font-size: 16px; color: #666; margin-top: 5px; }
         
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         th, td { border: 1px solid #333; padding: 10px; text-align: left; }
         th { background-color: rgba(0,0,0,0.05); }
-        .tracker-table td { text-align: center; font-size: 20px; height: 30px; }
+        .tracker-table td { text-align: center; font-size: 20px; height: 35px; }
 
-        .footer-note { font-style: italic; margin-top: 30px; border-left: 5px solid #ff6b6b; padding-left: 15px; }
+        .footer-note { font-style: italic; margin-top: 30px; border-left: 5px solid #ff6b6b; padding-left: 15px; background: #fff9f9; padding: 15px; }
 
         @media print {
             body { background: none; padding: 0; }
@@ -41,69 +38,54 @@
 <body>
 
 <div class="controls">
-    <h2>🎨 Chart Maker Settings</h2>
-    <div class="input-group">
-        <label>お子さんの名前</label>
-        <input type="text" id="name" value="Emma">
+    <h2>🎨 My Custom Chart Settings</h2>
+    
+    <div class="input-group grid">
+        <div><label>お子さんの名前</label><input type="text" id="name" value="Emma"></div>
+        <div><label>好きな絵文字</label><input type="text" id="emoji" value="❄️"></div>
     </div>
+
     <div class="input-group">
-        <label>背景のアクセントカラー</label>
+        <label>テーマカラー</label>
         <input type="color" id="themeColor" value="#ffeaa7">
     </div>
+
     <div class="input-group">
-        <label>好きな絵文字（アイコン）</label>
-        <input type="text" id="emoji" value="❄️">
-    </div>
-    <div class="input-group">
-        <label>今週の目標（例：アナの練習！）</label>
+        <label>今週のメインテーマ（パッション！）</label>
         <input type="text" id="goal" value="Musical Theater (Anna - Frozen!)">
     </div>
-    <button onclick="window.print()">🖨 A4サイズで印刷・保存する</button>
+
+    <div class="input-group">
+        <label>💰 アクティビティと単価（4つまで）</label>
+        <div class="grid" style="margin-bottom:5px;"><input type="text" id="act1" value="英語の発音練習"><input type="text" id="pr1" value="¥80"></div>
+        <div class="grid" style="margin-bottom:5px;"><input type="text" id="act2" value="学校以外の算数"><input type="text" id="pr2" value="¥80"></div>
+        <div class="grid" style="margin-bottom:5px;"><input type="text" id="act3" value="漢字の復習"><input type="text" id="pr3" value="¥80"></div>
+        <div class="grid"><input type="text" id="act4" value="セリフや歌の練習"><input type="text" id="pr4" value="¥160"></div>
+    </div>
+
+    <div class="input-group">
+        <label>今週のボーナス上限</label>
+        <input type="text" id="maxBonus" value="¥800">
+    </div>
+
+    <div class="input-group">
+        <label>⚠️ 我が家の「聖域」メッセージ</label>
+        <input type="text" id="sanctuary" value="リハーサルは常に最優先の「聖域」です。">
+    </div>
+
+    <button onclick="window.print()">🖨 この設定でA4印刷する</button>
 </div>
 
 <div id="printable-chart">
-    <div class="chart-header" id="headerArea">
+    <div class="chart-header" id="headerArea" style="background-color: #ffeaa7;">
         <h1 class="chart-title"><span id="out-emoji">❄️</span> <span id="out-name">Emma</span>'s Weekly Chart</h1>
-        <p class="chart-subtitle" id="out-goal">Musical Theater (Anna - Frozen!) | Week of: ________________</p>
+        <p id="out-goal" style="font-size:18px; font-weight:bold; margin-top:10px;">Musical Theater (Anna - Frozen!)</p>
     </div>
 
-    <h3>💰 お小遣い設定 (My Allowance)</h3>
+    <h3>💰 お小遣い設定 (Allowance)</h3>
     <table>
-        <tr><th>内容 (Activity)</th><th>金額 (Earn)</th></tr>
-        <tr><td>英語の発音練習 (20分)</td><td>¥80 / 日</td></tr>
-        <tr><td>学校以外の算数の勉強 (20分)</td><td>¥80 / 日</td></tr>
-        <tr><td>漢字の復習 (10文字)</td><td>¥80 / 日</td></tr>
-        <tr><td>セリフや歌の練習</td><td>¥160 / 回</td></tr>
-        <tr style="background-color: #f9f9f9;"><td><strong>今週のボーナス上限</strong></td><td><strong>¥800</strong></td></tr>
-    </table>
-
-    <h3>✅ 週間トラッカー (Weekly Tracker)</h3>
-    <table class="tracker-table">
-        <tr><th>アクティビティ</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th><th>日</th></tr>
-        <tr><td>1. 英語 / Pronunciation</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td></tr>
-        <tr><td>2. 算数 / Math</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td></tr>
-        <tr><td>3. 漢字 / Kanji</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td></tr>
-        <tr><td>4. 歌・セリフ / Lines</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td></tr>
-    </table>
-
-    <div class="footer-note">
-        <p><strong>Reminder:</strong> リハーサルは常に最優先の「聖域」です。何にも邪魔させないで！ [cite: 58-60]</p>
-        <p>Keep going! Break a leg! ✨</p>
-    </div>
-</div>
-
-<script>
-    // 入力をリアルタイムに反映させる
-    const inputs = ['name', 'emoji', 'goal', 'themeColor'];
-    inputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', () => {
-            document.getElementById('out-' + id).innerText = document.getElementById(id).value;
-            if(id === 'themeColor') {
-                document.getElementById('headerArea').style.backgroundColor = document.getElementById(id).value;
-            }
-        });
-    });
-</script>
-
-</body>
-</html>
+        <tr><th>内容 (Activity)</th><th>単価 (Price)</th></tr>
+        <tr><td id="out-act1">英語の発音練習</td><td id="out-pr1">¥80</td></tr>
+        <tr><td id="out-act2">学校以外の算数</td><td id="out-pr2">¥80</td></tr>
+        <tr><td id="out-act3">漢字の復習</td><td id="out-pr3">¥80</td></tr>
+        <tr>
