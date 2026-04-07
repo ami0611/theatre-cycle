@@ -2,73 +2,97 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Family Inspiration Chart Maker - Final Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@600&display=swap" rel="stylesheet">
+    <title>Family Chart Maker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* 画面レイアウト：左に設定、右にプレビュー */
-        body { font-family: 'Noto Sans JP', sans-serif; background: #f0f2f5; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        body { font-family: 'Noto Sans JP', sans-serif; background: #f0f2f5; margin: 0; display: flex; height: 100vh; }
+        .editor { width: 350px; background: white; padding: 20px; overflow-y: auto; border-right: 2px solid #ddd; }
+        .preview { flex-grow: 1; padding: 20px; overflow-y: auto; background: #525659; display: flex; justify-content: center; }
+        input, select { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
+        label { font-size: 11px; font-weight: bold; color: #666; }
+        .btn { background: #ff6b6b; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; }
         
-        /* 左側：設定パネル */
-        .editor-panel { width: 420px; background: white; padding: 25px; overflow-y: auto; border-right: 2px solid #ddd; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 10; }
-        .editor-panel h2 { font-size: 20px; color: #ff6b6b; margin-top: 0; border-bottom: 2px solid #ff6b6b; padding-bottom: 10px; margin-bottom: 20px; }
-        .input-group { margin-bottom: 18px; }
-        label { display: block; font-weight: bold; font-size: 12px; color: #555; margin-bottom: 6px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; margin-bottom: 5px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        #chart { width: 210mm; min-height: 297mm; padding: 15mm; background: white; box-sizing: border-box; display: flex; flex-direction: column; }
+        .header { text-align: center; border: 3px solid #333; padding: 15px; margin-bottom: 20px; border-radius: 10px; }
+        .section-title { background: #333; color: white; padding: 3px 10px; font-size: 12px; font-weight: bold; margin-bottom: 8px; display: inline-block; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        th, td { border: 2px solid #333; padding: 8px; font-size: 11px; }
+        .tracker td { text-align: center; font-size: 18px; height: 35px; }
+        .footer { margin-top: auto; border-top: 3px solid #333; padding-top: 20px; }
+        .box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .box { border: 2px solid #333; height: 120px; border-radius: 8px; position: relative; }
+        .box-label { position: absolute; top: -10px; left: 10px; background: white; padding: 0 5px; font-weight: bold; font-size: 11px; }
         
-        .print-btn { background: #ff6b6b; color: white; border: none; padding: 18px; border-radius: 10px; cursor: pointer; font-size: 20px; width: 100%; font-weight: bold; margin-top: 25px; box-shadow: 0 4px 0 #ee5253; transition: 0.2s; }
-        .print-btn:hover { background: #ee5253; transform: translateY(-2px); }
-
-        /* 右側：プレビューエリア */
-        .preview-area { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; background: #525659; }
-        
-        /* A4チャート（印刷対象） */
-        #printable-chart { 
-            width: 210mm; min-height: 297mm; padding: 15mm; 
-            background: white; box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            display: flex; flex-direction: column; box-sizing: border-box;
-        }
-
-        /* デザイン設定 */
-        .chart-header { text-align: center; border: 3px solid #333; padding: 18px; margin-bottom: 25px; border-radius: 12px; }
-        .section-title { background: #333; color: white; padding: 5px 15px; display: inline-block; margin-bottom: 12px; font-size: 14px; font-weight: bold; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 2.5px solid #333; padding: 10px; text-align: left; font-size: 13px; }
-        .tracker td { text-align: center; font-size: 20px; height: 45px; }
-        .flex-row { display: grid; grid-template-columns: 1.3fr 1fr; gap: 25px; margin-bottom: 25px; }
-        
-        .reflection-area { margin-top: auto; padding-top: 25px; border-top: 3px solid #333; }
-        .box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-        .comment-box { border: 2.5px solid #333; height: 150px; border-radius: 10px; position: relative; padding: 15px; }
-        .box-label { position: absolute; top: -14px; left: 15px; background: white; padding: 0 10px; font-weight: bold; font-size: 14px; }
-
-        .quote-box { text-align: center; font-style: italic; border-top: 1px dashed #ccc; padding-top: 20px; color: #555; font-size: 13px; min-height: 45px; }
-
-        @media print {
-            body { background: white; overflow: visible; }
-            .editor-panel { display: none !important; }
-            .preview-area { padding: 0; background: none; overflow: visible; }
-            #printable-chart { box-shadow: none; border: none; margin: 0; width: 210mm; height: 297mm; }
-        }
+        @media print { .editor { display: none; } .preview { background: white; padding: 0; } #chart { border: none; box-shadow: none; } }
     </style>
 </head>
 <body>
 
-<div class="editor-panel">
-    <h2>🛠 Chart Editor Pro</h2>
-    
-    <div class="input-group">
-        <label>お子さんの名前 / 絵文字</label>
-        <div class="grid-2">
-            <input type="text" id="in-name" value="Emma">
-            <input type="text" id="in-emoji" value="❄️">
+<div class="editor">
+    <h2 style="font-size:16px; color:#ff6b6b;">🛠 Chart Editor</h2>
+    <label>名前 / 絵文字 / 色</label>
+    <div style="display:flex; gap:5px;"><input type="text" id="i-n" value="Emma"><input type="text" id="i-e" value="❄️"><input type="color" id="i-c" value="#ffeaa7"></div>
+    <label>目標 (Goal)</label><input type="text" id="i-g" value="Musical Theater (Anna!)">
+    <label>アクティビティ (4つ)</label>
+    <input type="text" id="i-a1" value="英語の発音練習"><input type="text" id="i-a2" value="学校以外の算数">
+    <input type="text" id="i-a3" value="漢字の復習"><input type="text" id="i-a4" value="セリフや歌の練習">
+    <label>平日 / 週末 制限時間</label>
+    <div style="display:flex; gap:5px;"><input type="text" id="i-wd" value="45m"><input type="text" id="i-we" value="60m"></div>
+    <label>左枠タイトル (振り返り)</label><input type="text" id="i-rt" value="Weekly Reflection">
+    <label>右枠タイトル (メッセージ)</label><input type="text" id="i-mt" value="Message from Family">
+    <label>聖域メッセージ</label><input type="text" id="i-msg" value="Rehearsal is ALWAYS protected time! ✨">
+    <button class="btn" onclick="window.print()">🖨 印刷する</button>
+</div>
+
+<div class="preview">
+    <div id="chart">
+        <div class="header" id="o-h" style="background-color: #ffeaa7;">
+            <h1 style="margin:0; font-size:24px;"><span id="o-e">❄️</span> <span id="o-n">Emma</span>'s Chart</h1>
+            <p id="o-g" style="margin:5px 0 0; font-weight:bold; font-size:15px;">Musical Theater (Anna - Frozen!)</p>
+        </div>
+        <div style="display:grid; grid-template-columns: 1.3fr 1fr; gap:20px; margin-bottom:15px;">
+            <div><span class="section-title">💰 Allowance</span>
+                <table><tr><th>Activity</th><th>Earn</th></tr>
+                <tr><td id="o-a1">英語の発音練習</td><td>¥80</td></tr><tr><td id="o-a2">学校以外の算数</td><td>¥80</td></tr>
+                <tr><td id="o-a3">漢字の復習</td><td>¥80</td></tr><tr><td id="o-a4">セリフや歌の練習</td><td>¥160</td></tr></table>
+            </div>
+            <div><span class="section-title">📱 Screen Time</span>
+                <table><tr><th>Weekday</th><th>Weekend</th></tr><tr><td id="o-wd" style="text-align:center;">45m</td><td id="o-we" style="text-align:center;">60m</td></tr></table>
+                <div style="font-size:10px; background:#fff9e6; padding:8px; border:2px solid #333; margin-top:5px;">
+                    <strong>Sanctuary:</strong> <span id="o-msg">Rehearsal is ALWAYS protected time! ✨</span>
+                </div>
+            </div>
+        </div>
+        <span class="section-title">✅ Activity Tracker</span>
+        <table class="tracker"><tr><th style="width:30%;">Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
+        <tr><td id="o-a1-t">英語の発音練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="o-a2-t">学校以外の算数</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="o-a3-t">漢字の復習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="o-a4-t">セリフや歌の練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr></table>
+        <div class="footer">
+            <div class="box-grid">
+                <div class="box"><div class="box-label" id="o-rt">Weekly Reflection</div></div>
+                <div class="box"><div class="box-label" id="o-mt">Message from Family</div></div>
+            </div>
+            <div style="display:flex; justify-content: space-between; font-size:11px; font-weight:bold;">
+                <span>Total Earned: ¥ _________</span><span>Break a leg! ✨</span>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="input-group">
-        <label>カラー / 書体</label>
-        <div class="grid-2">
-            <input type="color" id="in-color" value="#ffeaa7">
-            <select id="in-font">
-                <option value="'Noto Sans JP'">Standard</option>
-                <option
+<script>
+    const map = {
+        'i-n':['o-n'],'i-e':['o-e'],'i-g':['o-g'],'i-a1':['o-a1','o-a1-t'],'i-a2':['o-a2','o-a2-t'],
+        'i-a3':['o-a3','o-a3-t'],'i-a4':['o-a4','o-a4-t'],'i-wd':['o-wd'],'i-we':['o-we'],
+        'i-rt':['o-rt'],'i-mt':['o-mt'],'i-msg':['o-msg']
+    };
+    Object.keys(map).forEach(id => {
+        document.getElementById(id).addEventListener('input', (e) => {
+            map[id].forEach(outId => { document.getElementById(outId).innerText = e.target.value; });
+        });
+    });
+    document.getElementById('i-c').addEventListener('input', (e) => { document.getElementById('o-h').style.backgroundColor = e.target.value; });
+</script>
+</body>
+</html>
