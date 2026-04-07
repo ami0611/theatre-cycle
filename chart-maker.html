@@ -3,89 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Weekly Chart Maker | Theatre Cycle</title>
+    <title>Family Economy Chart Maker | Theatre Cycle</title>
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
-        .controls { max-width: 800px; margin: 0 auto 30px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .input-group { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { background: #ff6b6b; color: white; border: none; padding: 15px; border-radius: 4px; cursor: pointer; font-size: 18px; width: 100%; margin-top: 20px; font-weight: bold; }
-        button:hover { background: #ee5253; }
+        .controls { max-width: 800px; margin: 0 auto 30px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #555; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: #ff6b6b; outline: none; box-shadow: 0 0 5px rgba(255,107,107,0.3); }
+        button { background: #ff6b6b; color: white; border: none; padding: 18px; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; margin-top: 10px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #ee5253; transform: translateY(-2px); }
 
+        /* A4印刷用 */
         #printable-chart { 
             width: 210mm; min-height: 297mm; padding: 15mm; margin: 0 auto;
-            background: white; border: 1px solid #eee; box-sizing: border-box;
+            background: white; border: 1px solid #ddd; box-sizing: border-box;
         }
-        .chart-header { text-align: center; border-bottom: 3px solid #333; padding: 20px; margin-bottom: 20px; }
-        .chart-title { font-size: 28px; margin: 0; }
+        .chart-header { text-align: center; border-bottom: 3px solid #333; padding: 20px; margin-bottom: 25px; border-radius: 8px 8px 0 0; }
+        .chart-title { font-size: 32px; margin: 0; font-weight: 800; }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
-        th { background-color: rgba(0,0,0,0.05); }
-        .tracker-table td { text-align: center; font-size: 20px; height: 35px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
+        th, td { border: 2px solid #333; padding: 12px; text-align: left; }
+        th { background-color: rgba(0,0,0,0.03); font-weight: bold; }
+        .tracker-table td { text-align: center; font-size: 22px; height: 45px; }
 
-        .footer-note { font-style: italic; margin-top: 30px; border-left: 5px solid #ff6b6b; padding-left: 15px; background: #fff9f9; padding: 15px; }
+        .footer-note { margin-top: 35px; border-left: 8px solid #333; padding: 20px; background: #f9f9f9; border-radius: 0 8px 8px 0; }
+        .footer-note p { margin: 5px 0; font-size: 15px; }
 
         @media print {
             body { background: none; padding: 0; }
             .controls { display: none; }
-            #printable-chart { border: none; margin: 0; }
+            #printable-chart { border: none; margin: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
 
 <div class="controls">
-    <h2>🎨 My Custom Chart Settings</h2>
+    <h2 style="margin-top:0;">🎨 Chart Personalization</h2>
     
     <div class="input-group grid">
-        <div><label>お子さんの名前</label><input type="text" id="name" value="Emma"></div>
-        <div><label>好きな絵文字</label><input type="text" id="emoji" value="❄️"></div>
+        <div><label>お子さんの名前</label><input type="text" id="in-name" value="Emma"></div>
+        <div><label>好きな絵文字</label><input type="text" id="in-emoji" value="❄️"></div>
+    </div>
+
+    <div class="input-group grid">
+        <div><label>テーマカラー</label><input type="color" id="in-color" value="#ffeaa7"></div>
+        <div><label>今週の目標・情熱</label><input type="text" id="in-goal" value="Musical Theater (Anna - Frozen!)"></div>
     </div>
 
     <div class="input-group">
-        <label>テーマカラー</label>
-        <input type="color" id="themeColor" value="#ffeaa7">
-    </div>
-
-    <div class="input-group">
-        <label>今週のメインテーマ（パッション！）</label>
-        <input type="text" id="goal" value="Musical Theater (Anna - Frozen!)">
-    </div>
-
-    <div class="input-group">
-        <label>💰 アクティビティと単価（4つまで）</label>
-        <div class="grid" style="margin-bottom:5px;"><input type="text" id="act1" value="英語の発音練習"><input type="text" id="pr1" value="¥80"></div>
-        <div class="grid" style="margin-bottom:5px;"><input type="text" id="act2" value="学校以外の算数"><input type="text" id="pr2" value="¥80"></div>
-        <div class="grid" style="margin-bottom:5px;"><input type="text" id="act3" value="漢字の復習"><input type="text" id="pr3" value="¥80"></div>
-        <div class="grid"><input type="text" id="act4" value="セリフや歌の練習"><input type="text" id="pr4" value="¥160"></div>
-    </div>
-
-    <div class="input-group">
-        <label>今週のボーナス上限</label>
-        <input type="text" id="maxBonus" value="¥800">
-    </div>
-
-    <div class="input-group">
-        <label>⚠️ 我が家の「聖域」メッセージ</label>
-        <input type="text" id="sanctuary" value="リハーサルは常に最優先の「聖域」です。">
-    </div>
-
-    <button onclick="window.print()">🖨 この設定でA4印刷する</button>
-</div>
-
-<div id="printable-chart">
-    <div class="chart-header" id="headerArea" style="background-color: #ffeaa7;">
-        <h1 class="chart-title"><span id="out-emoji">❄️</span> <span id="out-name">Emma</span>'s Weekly Chart</h1>
-        <p id="out-goal" style="font-size:18px; font-weight:bold; margin-top:10px;">Musical Theater (Anna - Frozen!)</p>
-    </div>
-
-    <h3>💰 お小遣い設定 (Allowance)</h3>
-    <table>
-        <tr><th>内容 (Activity)</th><th>単価 (Price)</th></tr>
-        <tr><td id="out-act1">英語の発音練習</td><td id="out-pr1">¥80</td></tr>
-        <tr><td id="out-act2">学校以外の算数</td><td id="out-pr2">¥80</td></tr>
-        <tr><td id="out-act3">漢字の復習</td><td id="out-pr3">¥80</td></tr>
-        <tr>
+        <label>💰 アクティビティと報酬額</label>
+        <div class="grid" style="margin-bottom:8px;"><input type="text" id="in-act1" value="英語の発音練習"><input type="text" id="in-pr1" value="¥80"></div>
+        <div class="grid" style="margin-bottom:8px;"><input type="text" id="in-act2" value="学校以外の算数"><input type="text" id="in-pr2" value="¥80"></div>
