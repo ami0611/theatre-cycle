@@ -3,57 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Economy Chart Maker | Theatre Cycle</title>
+    <title>Family Economy & Screen Time Chart Maker</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f4f7f6; padding: 20px; color: #333; }
-        .controls { max-width: 800px; margin: 0 auto 30px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .input-group { margin-bottom: 20px; border-bottom: 1px dashed #ddd; padding-bottom: 15px; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f0f2f5; padding: 20px; color: #333; line-height: 1.4; }
+        .controls { max-width: 900px; margin: 0 auto 30px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #555; }
-        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        input:focus { border-color: #ff6b6b; outline: none; box-shadow: 0 0 5px rgba(255,107,107,0.3); }
-        button { background: #ff6b6b; color: white; border: none; padding: 18px; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; margin-top: 10px; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #ee5253; transform: translateY(-2px); }
+        .input-group { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px; color: #666; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        h2, h3 { margin-top: 0; color: #222; }
+        button { background: #ff6b6b; color: white; border: none; padding: 18px; border-radius: 8px; cursor: pointer; font-size: 18px; width: 100%; font-weight: bold; margin-top: 10px; }
 
-        /* A4印刷用 */
+        /* A4 Layout */
         #printable-chart { 
-            width: 210mm; min-height: 297mm; padding: 15mm; margin: 0 auto;
-            background: white; border: 1px solid #ddd; box-sizing: border-box;
+            width: 210mm; min-height: 297mm; padding: 12mm; margin: 0 auto;
+            background: white; box-sizing: border-box; border: 1px solid #eee;
         }
-        .chart-header { text-align: center; border-bottom: 3px solid #333; padding: 20px; margin-bottom: 25px; border-radius: 8px 8px 0 0; }
-        .chart-title { font-size: 32px; margin: 0; font-weight: 800; }
+        .chart-header { text-align: center; padding: 15px; margin-bottom: 20px; border-radius: 8px; border: 2px solid #333; }
+        .section-title { background: #333; color: white; padding: 5px 10px; display: inline-block; margin-bottom: 10px; font-size: 14px; }
         
-        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
-        th, td { border: 2px solid #333; padding: 12px; text-align: left; }
-        th { background-color: rgba(0,0,0,0.03); font-weight: bold; }
-        .tracker-table td { text-align: center; font-size: 22px; height: 45px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; table-layout: fixed; }
+        th, td { border: 1px solid #333; padding: 8px; text-align: left; font-size: 13px; word-wrap: break-word; }
+        th { background: #f2f2f2; }
+        .tracker-table td { text-align: center; font-size: 18px; height: 35px; }
 
-        .footer-note { margin-top: 35px; border-left: 8px solid #333; padding: 20px; background: #f9f9f9; border-radius: 0 8px 8px 0; }
-        .footer-note p { margin: 5px 0; font-size: 15px; }
+        .rules-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .footer-area { margin-top: 20px; border-top: 2px solid #333; padding-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .note-box { border: 2px dashed #333; padding: 10px; border-radius: 5px; font-size: 12px; }
 
         @media print {
             body { background: none; padding: 0; }
             .controls { display: none; }
-            #printable-chart { border: none; margin: 0; width: 100%; }
+            #printable-chart { border: none; margin: 0; width: 210mm; }
         }
     </style>
 </head>
 <body>
 
 <div class="controls">
-    <h2 style="margin-top:0;">🎨 Chart Personalization</h2>
+    <h2>🎨 Comprehensive Chart Settings</h2>
     
     <div class="input-group grid">
         <div><label>お子さんの名前</label><input type="text" id="in-name" value="Emma"></div>
-        <div><label>好きな絵文字</label><input type="text" id="in-emoji" value="❄️"></div>
-    </div>
-
-    <div class="input-group grid">
-        <div><label>テーマカラー</label><input type="color" id="in-color" value="#ffeaa7"></div>
-        <div><label>今週の目標・情熱</label><input type="text" id="in-goal" value="Musical Theater (Anna - Frozen!)"></div>
+        <div><label>テーマ絵文字 & カラー</label>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="in-emoji" value="❄️" style="width:40px;">
+                <input type="color" id="in-color" value="#ffeaa7">
+            </div>
+        </div>
     </div>
 
     <div class="input-group">
-        <label>💰 アクティビティと報酬額</label>
-        <div class="grid" style="margin-bottom:8px;"><input type="text" id="in-act1" value="英語の発音練習"><input type="text" id="in-pr1" value="¥80"></div>
-        <div class="grid" style="margin-bottom:8px;"><input type="text" id="in-act2" value="学校以外の算数"><input type="text" id="in-pr2" value="¥80"></div>
+        <label>今週の情熱 (Main Passion)</label>
+        <input type="text" id="in-goal" value="Musical Theater (Anna - Frozen!)">
+    </div>
+
+    <div class="grid">
+        <div class="input-group">
+            <label>💰 お小遣いアクティビティ (内容 / 単価)</label>
+            <div style="display:flex; gap:2px; margin-bottom:4px;"><input type="text" id="in-act1" value="英語の発音練習"><input type="text" id="in-pr1" value="¥80"></div>
+            <div style="display:flex; gap:2px; margin-bottom:4px;"><input type="text" id="in-act2" value="学校以外の算数"><input type="text" id="in-pr2" value="¥80"></div>
+            <div style="display:flex; gap:2px; margin-bottom:4px;"><input type="text" id="in-act3" value="漢字の復習"><input type="text" id="in-pr3" value="¥80"></div>
+            <div style="display:flex; gap:2px;"><input type="text" id="in-act4" value="セリフや歌の練習"><input type="text" id="in-pr4" value="¥160"></div>
+        </div>
+        <div class="input-group">
+            <label>📱 スクリーンタイム・ルール</label>
+            <div style="margin-bottom:4px;"><label style="font-size:10px;">平日 / 週末</label>
+                <div style="display:flex; gap:2px;"><input type="text" id="in-st-wd" value="45 min"><input type="text" id="in-st-we" value="60 min"></div>
+            </div>
+            <div style="margin-bottom:4px;"><label style="font-size:10px;">ボーナス条件（例：20分読書で＋15分）</label>
+                <input type="text" id="in-st-bonus" value="Read in English (20 min) = +15 min">
+            </div>
+            <div><label style="font-size:10px;">無制限ルール (UNLIMITED)</label>
+                <input type="text" id="in-st-unlimited" value="Frozen musical research = UNLIMITED">
+            </div>
+        </div>
+    </div>
+
+    <div class="input-group grid">
+        <div><label>ベースお小遣い / 上限</label>
+            <div style="display:flex; gap:2px;"><input type="text" id="in-base" value="¥500"><input type="text" id="in-max" value="¥800"></div>
+        </div>
+        <div><label>聖域・応援メッセージ</label>
+            <input type="text" id="in-msg" value="Rehearsal is ALWAYS protected time! Break a leg!">
+        </div>
+    </div>
+
+    <button onclick="window.print()">🖨 この内容でA4チャートを生成</button>
+</div>
+
+<div id="printable-chart">
+    <div class="chart-header" id="out-header" style="background-color: #ffeaa7;">
+        <h1 style="margin:0; font-size:24px;"><span id="out-emoji">❄️</span> <span id="out-name">Emma</span>'s Weekly Chart</h1>
+        <p id="out-goal" style="margin:5px 0 0; font-weight:bold;">Musical Theater (Anna - Frozen!)</p>
+    </div>
+
+    <div class="rules-grid">
+        <div>
+            <span class="section-title">💰 My Allowance</span>
+            <table>
+                <tr><th>Activity</th><th>Earn</th></tr>
+                <tr><td id="out-act1">英語の発音練習</td><td id="out-pr1">¥80</td></tr>
+                <tr><td id="out-act2">学校以外の算数</td><td id="out-pr2">¥80</td></tr>
+                <tr><td id="out-act3">漢字の復習</td><td id="out-pr3">¥80</td></tr>
+                <tr><td id="out-act4">セリフや歌の練習</td><td id="out-pr4">¥160</td></tr>
+                <tr style="background:#f9f9f9;"><td>Base Allowance / Max Extra</td><td><span id="out-base">¥500</span> / <span id="out-max">¥800</span></td></tr>
+            </table>
+        </div>
+        <div>
+            <span class="section-title">📱 Screen Time Rules</span>
+            <table>
+                <tr><td>Weekdays</td><td id="out-st-wd">45 min</td></tr>
+                <tr><td>Weekends</td><td id="out-st-we">60 min</td></tr>
+                <tr><td colspan="2" style="font-size:11px; background:#fff9e6;">
+                    <strong>Bonus:</strong> <span id="out-st-bonus">Read in English (20 min) = +15 min</span><br>
+                    <strong>Unlimited:</strong> <span id="out-st-unlimited">Frozen musical research</span>
+                </td></tr>
+            </table>
+        </div>
+    </div>
+
+    <span class="section-title">✅ Weekly Activity Tracker</span>
+    <table class="tracker-table">
+        <tr><th style="width:30%;">Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
+        <tr><td id="out-act1-t" style="text-align:left; font-size:11px;">英語の発音練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act2-t" style="text-align:left; font-size:11px;">学校以外の算数</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act3-t" style="text-align:left; font-size:11px;">漢字の復習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+        <tr><td id="out-act4-t" style="text-align:left; font-size:11px;">セリフや歌の練習</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td><td>〇</td></tr>
+    </table>
+
+    <div class="footer-area">
+        <div class="note-box" id="out-border">
+            <strong>🌟 Family Core Value:</strong>
+            <p id="out-msg" style="margin:5px 0; font-size:13px; font-weight:bold;">Rehearsal is ALWAYS protected time! Break a leg!</p>
+        </div>
+        <div style="border: 2px solid #333; padding:10px; text-align:center;">
+            <span style="font-size:12px;">Total Earned This Week:</span>
+            <div style="font-size:24px; font-weight:bold; margin-top:5px;">¥ _________</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const map = {
+        'in-name': ['out-name'], 'in-emoji': ['out-emoji'], 'in-goal': ['out-goal'],
+        'in-act1': ['out-act1', 'out-act1-t'], 'in-act2': ['out-act2', 'out-act2-t'],
+        'in-act3': ['out-act3', 'out-act3-t'], 'in-act4': ['out-act4', 'out-act4-t'],
+        'in-pr1': ['out-pr1'], 'in-pr2': ['out-pr2'], 'in-pr3': ['out-pr3'], 'in-pr4': ['out-pr4'],
+        'in-base': ['out-base'], 'in-max': ['out-max'], 'in-msg': ['out-msg'],
+        'in-st-wd': ['out-st-wd'], 'in-st-we': ['out-st-we'], 'in-st-bonus': ['out-st-bonus'],
+        'in-st-unlimited': ['out-st-unlimited']
+    };
+
+    Object.keys(map).forEach(key => {
+        document.getElementById(key).addEventListener('input', (e) => {
+            map[key].forEach(outId => { document.getElementById(outId).innerText = e.target.value; });
+        });
+    });
+
+    document.getElementById('in-color').addEventListener('input', (e) => {
+        document.getElementById('out-header').style.backgroundColor = e.target.value;
+        document.getElementById('out-border').style.borderColor = e.target.value;
+    });
+</script>
+</body>
+</html>
