@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Family Passion Chart - Print Ready</title>
+    <title>Family Passion Chart - Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; background: #f0f2f5; margin: 0; display: flex; height: 100vh; overflow: hidden; }
@@ -19,38 +19,57 @@
         th, td { border: 2px solid #333; padding: 8px; font-size: 11px; }
         .tracker td { text-align: center; height: 35px; }
         .tracker input[type="checkbox"] { transform: scale(1.4); }
+        
+        /* 合計金額エリア */
         .summary { background: #f0f9ff; border: 2px solid #0077cc; padding: 15px; border-radius: 10px; margin-top: 10px; display: flex; justify-content: space-around; text-align: center; }
-        .val { font-size: 22px; font-weight: bold; color: #0077cc; }
-        .blank { display: none; font-size: 20px; font-weight: bold; }
+        .val-text { font-size: 22px; font-weight: bold; color: #0077cc; }
+        .blank-text { display: none; font-size: 20px; font-weight: bold; }
+
         .footer { margin-top: auto; border-top: 3px solid #333; padding-top: 15px; }
         .box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
         .box { border: 2px solid #333; height: 110px; border-radius: 8px; position: relative; }
         .box-l { position: absolute; top: -10px; left: 10px; background: white; padding: 0 5px; font-weight: bold; font-size: 11px; }
         
+        /* 【最重要】印刷時の上書き設定 */
         @media print {
-            .editor { display: none; } .preview { background: white; padding: 0; } #chart { border: none; }
-            .tracker input[type="checkbox"] { appearance: none; -webkit-appearance: none; border: 2px solid #333; width: 18px; height: 18px; background: white; }
-            .val { display: none; } .blank { display: inline-block; } .summary { border-color: #333; background: white; }
+            .editor { display: none !important; }
+            .preview { background: white !important; padding: 0 !important; }
+            #chart { border: none !important; box-shadow: none !important; margin: 0 !important; }
+            
+            /* チェックボックスを真っ白な四角にする */
+            .tracker input[type="checkbox"] { 
+                appearance: none !important; -webkit-appearance: none !important; 
+                border: 2px solid #333 !important; width: 18px !important; height: 18px !important; background: white !important; 
+            }
+            
+            /* 画面上の「0」や計算結果を隠して、下線を出す */
+            .val-text { display: none !important; }
+            .blank-text { display: inline-block !important; }
+            
+            /* 青い背景を白に戻す */
+            .summary { border-color: #333 !important; background: white !important; }
         }
     </style>
 </head>
 <body>
+
 <div class="editor">
-    <h2 style="font-size:16px; color:#ff6b6b; margin-top:0;">🛠 Chart Editor</h2>
+    <h2 style="font-size:16px; color:#ff6b6b; margin-top:0;">🛠 Final Editor</h2>
     <label>名前 / カラー</label>
     <div style="display:flex; gap:5px;"><input type="text" id="i-n" value="Emma"><input type="color" id="i-c" value="#ffeaa7"></div>
-    <label>💰 内容 / 単価 / ボーナス分</label>
+    <label>💰 内容 / 単価 / ボーナス時間</label>
     <div style="display:flex; gap:2px;"><input type="text" id="i-a1" value="英語の発音"><input type="text" id="i-p1" value="80" style="width:60px;"><input type="text" id="i-b1" value="15" style="width:60px;"></div>
     <div style="display:flex; gap:2px;"><input type="text" id="i-a2" value="算数の練習"><input type="text" id="i-p2" value="80" style="width:60px;"><input type="text" id="i-b2" value="0" style="width:60px;"></div>
     <div style="display:flex; gap:2px;"><input type="text" id="i-a3" value="漢字の復習"><input type="text" id="i-p3" value="80" style="width:60px;"><input type="text" id="i-b3" value="0" style="width:60px;"></div>
     <div style="display:flex; gap:2px;"><input type="text" id="i-a4" value="セリフ練習"><input type="text" id="i-p4" value="160" style="width:60px;"><input type="text" id="i-b4" value="10" style="width:60px;"></div>
     <label>📱 平日 / 週末 制限</label>
     <div style="display:flex; gap:5px;"><input type="text" id="i-wd" value="45 min"><input type="text" id="i-we" value="60 min"></div>
-    <label>🌟 メッセージ</label><input type="text" id="i-msg" value="Rehearsal is ALWAYS protected time! ✨">
-    <label>🌈 タイトル (左 / 右)</label>
+    <label>🌟 聖域・タイトル (左 / 右)</label>
+    <input type="text" id="i-msg" value="Rehearsal is ALWAYS protected time! ✨">
     <div style="display:flex; gap:5px;"><input type="text" id="i-rt" value="Reflection"><input type="text" id="i-mt" value="Message"></div>
-    <button class="btn" onclick="window.print()">🖨 印刷する (合計は空欄になります)</button>
+    <button class="btn" onclick="window.print()">🖨 印刷（空欄で出力されます）</button>
 </div>
+
 <div class="preview">
     <div id="chart">
         <div class="header" id="o-h" style="background-color: #ffeaa7;">
@@ -64,36 +83,4 @@
                 <tr><td id="o-a3"></td><td>¥<span id="o-p3"></span></td><td>+<span id="o-b3"></span>m</td></tr>
                 <tr><td id="o-a4"></td><td>¥<span id="o-p4"></span></td><td>+<span id="o-b4"></span>m</td></tr></table>
             </div>
-            <div><span class="section-title">📱 Screen Time</span>
-                <table><tr><th>Weekday</th><th>Weekend</th></tr><tr><td id="o-wd" style="text-align:center;"></td><td id="o-we" style="text-align:center;"></td></tr></table>
-                <div style="font-size:10px; background:#fff9e6; border:2px solid #333; padding:8px;"><span id="o-msg"></span></div>
-            </div>
-        </div>
-        <span class="section-title">✅ Activity Tracker</span>
-        <table class="tracker"><tr><th style="width:30%;">Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
-        <script>for(let i=1; i<=4; i++){ document.write(`<tr><td id="o-t${i}" style="text-align:left; padding-left:10px;"></td>`); for(let j=0; j<7; j++) document.write(`<td><input type="checkbox" class="ck" data-i="${i}"></td>`); document.write(`</tr>`); }</script>
-        </table>
-        <div class="summary">
-            <div><span>Total Earned</span><br><span class="val">¥<span id="t-m">0</span></span><span class="blank">¥ _________</span></div>
-            <div><span>Additional Time</span><br><span class="val">+<span id="t-t">0</span> min</span><span class="blank">+ _________ min</span></div>
-        </div>
-        <div class="footer"><div class="box-grid"><div class="box"><div class="box-l" id="o-rt"></div></div><div class="box"><div class="box-l" id="o-mt"></div></div></div><div style="text-align:center; font-weight:bold; font-size:13px;">Keep going! Break a leg! ✨</div></div>
-    </div>
-</div>
-<script>
-    const map = { 'i-n':['o-n'],'i-a1':['o-a1','o-t1'],'i-a2':['o-a2','o-t2'],'i-a3':['o-a3','o-t3'],'i-a4':['o-a4','o-t4'],'i-p1':['o-p1'],'i-p2':['o-p2'],'i-p3':['o-p3'],'i-p4':['o-p4'],'i-b1':['o-b1'],'i-b2':['o-b2'],'i-b3':['o-b3'],'i-b4':['o-b4'],'i-wd':['o-wd'],'i-we':['o-we'],'i-msg':['o-msg'],'i-rt':['o-rt'],'i-mt':['o-mt'] };
-    function calc() {
-        let m=0, t=0; for(let i=1;i<=4;i++){ const c=document.querySelectorAll(`.ck[data-i="${i}"]:checked`).length; m+=c*(parseInt(document.getElementById(`i-p${i}`).value)||0); t+=c*(parseInt(document.getElementById(`i-b${i}`).value)||0); }
-        document.getElementById('t-m').innerText=m; document.getElementById('t-t').innerText=t;
-    }
-    Object.keys(map).forEach(id => {
-        const el=document.getElementById(id); if(el){
-            const up=()=>{ map[id].forEach(oid=>document.getElementById(oid).innerText=el.value); calc(); };
-            el.addEventListener('input',up); up();
-        }
-    });
-    document.querySelectorAll('.ck').forEach(c=>c.addEventListener('change',calc));
-    document.getElementById('i-c').addEventListener('input',(e)=>document.getElementById('o-h').style.backgroundColor=e.target.value);
-</script>
-</body>
-</html>
+            <div><span class="section-title">📱 Screen Time Rules
