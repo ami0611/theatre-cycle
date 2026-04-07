@@ -2,9 +2,10 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Passion Chart & Calculator</title>
+    <title>Family Passion Chart - Print Ready</title>
     <link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* 画面表示用のスタイル */
         body { font-family: 'Noto Sans JP', sans-serif; background: #f0f2f5; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .editor { width: 380px; background: white; padding: 20px; overflow-y: auto; border-right: 2px solid #ddd; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
         .preview { flex-grow: 1; padding: 30px; overflow-y: auto; background: #525659; display: flex; justify-content: center; }
@@ -14,33 +15,53 @@
         .grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px; }
         .print-btn { background: #ff6b6b; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; margin-top: 20px; }
 
+        /* A4チャートのレイアウト */
         #chart { width: 210mm; min-height: 297mm; padding: 12mm; background: white; box-sizing: border-box; display: flex; flex-direction: column; }
         .header { text-align: center; border: 3px solid #333; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
         .section-title { background: #333; color: white; padding: 3px 12px; font-size: 12px; font-weight: bold; margin-bottom: 8px; display: inline-block; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
         th, td { border: 2px solid #333; padding: 8px; font-size: 11px; }
         
-        /* チェックボックスの見た目 */
-        .tracker input[type="checkbox"] { transform: scale(1.5); cursor: pointer; }
-        
+        .tracker td { text-align: center; height: 35px; }
+        .tracker input[type="checkbox"] { transform: scale(1.4); cursor: pointer; }
+
         .rules-flex { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; margin-bottom: 15px; }
+        .sanctuary-box { background: #fff9e6; border: 2px solid #333; padding: 10px; font-size: 11px; }
+
+        /* 合計金額・ボーナス時間の表示エリア */
         .summary-box { background: #f0f9ff; border: 2.5px solid #0077cc; padding: 15px; border-radius: 10px; margin-top: 15px; display: flex; justify-content: space-around; text-align: center; }
-        .summary-item { display: flex; flex-direction: column; }
         .summary-val { font-size: 24px; font-weight: bold; color: #0077cc; }
+        .print-only-blank { display: none; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
 
         .footer { margin-top: auto; border-top: 3px solid #333; padding-top: 15px; }
         .box-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px; }
-        .reflect-box { border: 2px solid #333; height: 120px; border-radius: 8px; position: relative; }
+        .reflect-box { border: 2px solid #333; height: 110px; border-radius: 8px; position: relative; }
         .box-label { position: absolute; top: -12px; left: 10px; background: white; padding: 0 8px; font-weight: bold; font-size: 12px; }
 
-        @media print { .editor { display: none; } .preview { background: white; padding: 0; } #chart { border: none; box-shadow: none; margin: 0; } .tracker input[type="checkbox"] { -webkit-appearance: none; border: 1px solid #333; width: 15px; height: 15px; } }
+        /* 【重要】印刷時の設定 */
+        @media print {
+            .editor { display: none; }
+            .preview { background: white; padding: 0; }
+            #chart { border: none; box-shadow: none; margin: 0; }
+            
+            /* チェックボックスを空の四角にする */
+            .tracker input[type="checkbox"] { 
+                appearance: none; -webkit-appearance: none;
+                border: 2px solid #333; width: 18px; height: 18px; border-radius: 3px; background: white;
+            }
+            
+            /* 合計値を消して、手書き用のブランク（____）を出す */
+            .summary-val { display: none; }
+            .print-only-blank { display: inline-block; }
+            .summary-box { border-color: #333; background: white; }
+        }
     </style>
 </head>
 <body>
 
 <div class="editor">
-    <h2>🛠 Calculator & Designer</h2>
-    <label>名前 / カラー</label>
+    <h2>🛠 Print Mode Editor</h2>
+    <label>お子さんの名前 / カラー</label>
     <div style="display:flex; gap:5px;"><input type="text" id="i-n" value="Emma"><input type="color" id="i-c" value="#ffeaa7"></div>
     
     <label>💰 アクティビティ (内容 / 単価 / ボーナス分)</label>
@@ -49,29 +70,28 @@
     <div class="grid"><input type="text" id="i-a3" value="漢字の復習"><input type="text" id="i-p3" value="80"><input type="text" id="i-b3" value="0"></div>
     <div class="grid"><input type="text" id="i-a4" value="セリフ・歌練習"><input type="text" id="i-p4" value="160"><input type="text" id="i-b4" value="10"></div>
     
-    <label>📱 制限 (Weekday / Weekend)</label>
+    <label>📱 制限時間 (Weekday / Weekend)</label>
     <div style="display:flex; gap:5px;"><input type="text" id="i-wd" value="45 min"><input type="text" id="i-we" value="60 min"></div>
 
     <label>🌟 聖域・タイトル設定</label>
     <input type="text" id="i-msg" value="Rehearsal is ALWAYS protected time! ✨">
-    <div class="grid" style="grid-template-columns: 1fr 1fr;"><input type="text" id="i-rt" value="Reflection"><input type="text" id="i-mt" value="Message"></div>
+    <div class="grid" style="grid-template-columns: 1fr 1fr;"><input type="text" id="i-rt" value="Reflection"><input type="text" id="i-mt" value="Message from Mom"></div>
 
-    <button class="print-btn" onclick="window.print()">🖨 チャートを印刷する</button>
-    <p style="font-size:10px; color:#888; margin-top:10px;">※画面上でチェックを入れると集計されます。印刷は「空欄」の状態で出すのがおすすめです。</p>
+    <button class="print-btn" onclick="window.print()">🖨 印刷する (合計は空欄になります)</button>
 </div>
 
 <div class="preview">
     <div id="chart">
         <div class="header" id="o-h" style="background-color: #ffeaa7;">
             <h1 style="margin:0; font-size:26px;"><span id="o-n">Emma</span>'s Weekly Chart</h1>
-            <p id="o-g" style="font-weight:bold; font-size:16px;">Musical Theater & Learning Tracker</p>
+            <p style="font-weight:bold; font-size:15px; margin:5px 0 0;">Passion & Learning Tracker</p>
         </div>
 
         <div class="rules-flex">
             <div>
                 <span class="section-title">💰 Allowance Settings</span>
                 <table>
-                    <tr><th>Activity</th><th>Price</th><th>Bonus Time</th></tr>
+                    <tr><th>Activity</th><th>Price</th><th>Bonus</th></tr>
                     <tr><td id="o-a1">英語の発音</td><td>¥<span id="o-p1">80</span></td><td>+<span id="o-b1">15</span>m</td></tr>
                     <tr><td id="o-a2">学校以外の算数</td><td>¥<span id="o-p2">80</span></td><td>+<span id="o-b2">0</span>m</td></tr>
                     <tr><td id="o-a3">漢字の復習</td><td>¥<span id="o-p3">80</span></td><td>+<span id="o-b3">0</span>m</td></tr>
@@ -80,19 +100,19 @@
             </div>
             <div>
                 <span class="section-title">📱 Screen Time Rules</span>
-                <table><tr><th>Weekday</th><th>Weekend</th></tr><tr><td id="o-wd" style="text-align:center;">45 min</td><td id="o-we" style="text-align:center;">60 min</td></tr></table>
-                <div style="font-size:11px; background:#fff9e6; border:2px solid #333; padding:8px;">
-                    <strong>Sanctuary:</strong> <span id="o-msg">Rehearsal is ALWAYS protected time! ✨</span>
+                <table><tr><th>Weekday</th><th>Weekend</th></tr><tr><td id="o-wd" style="text-align:center; font-weight:bold;">45 min</td><td id="o-we" style="text-align:center; font-weight:bold;">60 min</td></tr></table>
+                <div class="sanctuary-box">
+                    <strong>🌟 Sanctuary:</strong> <span id="o-msg">Rehearsal is ALWAYS protected time! ✨</span>
                 </div>
             </div>
         </div>
 
-        <span class="section-title">✅ Weekly Tracker (Click to calculate!)</span>
+        <span class="section-title">✅ Weekly Tracker (Tick to calculate!)</span>
         <table class="tracker">
-            <tr><th>Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
+            <tr><th style="width:30%;">Activity</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>
             <script>
                 for(let i=1; i<=4; i++){
-                    document.write(`<tr><td id="o-a${i}-t"></td>`);
+                    document.write(`<tr><td id="o-a${i}-t" style="text-align:left; padding-left:10px;"></td>`);
                     for(let j=0; j<7; j++) document.write(`<td><input type="checkbox" class="act-check" data-act="${i}"></td>`);
                     document.write(`</tr>`);
                 }
@@ -100,22 +120,29 @@
         </table>
 
         <div class="summary-box">
-            <div class="summary-item"><span>Total Earned</span><span class="summary-val">¥<span id="total-money">0</span></span></div>
-            <div class="summary-item"><span>Additional Screen Time</span><span class="summary-val">+<span id="total-time">0</span> min</span></div>
+            <div style="display:flex; flex-direction:column;">
+                <span>Total Earned</span>
+                <span class="summary-val">¥<span id="total-money">0</span></span>
+                <span class="print-only-blank">¥ _________</span>
+            </div>
+            <div style="display:flex; flex-direction:column;">
+                <span>Bonus Screen Time</span>
+                <span class="summary-val">+<span id="total-time">0</span> min</span>
+                <span class="print-only-blank">+ _________ min</span>
+            </div>
         </div>
 
         <div class="footer">
             <div class="box-grid">
                 <div class="reflect-box"><div class="box-label" id="o-rt">Reflection</div></div>
-                <div class="reflect-box"><div class="box-label" id="o-mt">Message</div></div>
+                <div class="reflect-box"><div class="box-label" id="o-mt">Message from Mom</div></div>
             </div>
-            <div style="text-align:center; font-weight:bold; font-size:14px;">Keep going! Break a leg! ✨</div>
+            <div style="text-align:center; font-weight:bold; font-size:14px; margin-top:5px;">Keep going! Break a leg! ✨</div>
         </div>
     </div>
 </div>
 
 <script>
-    const ids = ['i-n','i-a1','i-a2','i-a3','i-a4','i-p1','i-p2','i-p3','i-p4','i-b1','i-b2','i-b3','i-b4','i-wd','i-we','i-msg','i-rt','i-mt'];
     const mapping = {
         'i-n':['o-n'], 'i-a1':['o-a1','o-a1-t'], 'i-a2':['o-a2','o-a2-t'], 'i-a3':['o-a3','o-a3-t'], 'i-a4':['o-a4','o-a4-t'],
         'i-p1':['o-p1'], 'i-p2':['o-p2'], 'i-p3':['o-p3'], 'i-p4':['o-p4'],
@@ -124,14 +151,12 @@
     };
 
     function calculate() {
-        let totalMoney = 0;
-        let totalTime = 0;
+        let totalMoney = 0; let totalTime = 0;
         for(let i=1; i<=4; i++) {
             const count = document.querySelectorAll(`.act-check[data-act="${i}"]:checked`).length;
             const price = parseInt(document.getElementById(`i-p${i}`).value) || 0;
             const bonus = parseInt(document.getElementById(`i-b${i}`).value) || 0;
-            totalMoney += count * price;
-            totalTime += count * bonus;
+            totalMoney += count * price; totalTime += count * bonus;
         }
         document.getElementById('total-money').innerText = totalMoney;
         document.getElementById('total-time').innerText = totalTime;
